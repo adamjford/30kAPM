@@ -26,3 +26,9 @@
 *.exe
 *.out
 *.app
+
+# Other
+*.sdf
+*.opensdf
+**/VisualStudio/Debug/
+**/VisualStudio/Release/
