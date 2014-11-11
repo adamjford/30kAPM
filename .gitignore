@@ -32,3 +32,4 @@
 *.opensdf
 **/VisualStudio/Debug/
 **/VisualStudio/Release/
+*.suo
