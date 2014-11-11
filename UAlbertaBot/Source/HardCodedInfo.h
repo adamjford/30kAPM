@@ -1,4 +1,4 @@
-/*#pragma once
+#pragma once
 
 #include "Common.h"
 #include "BWTA.h"
@@ -23,10 +23,9 @@ public:
 
 	enum ChokeType {MAIN_CHOKE, NATURAL_CHOKE, CHOKE_TYPES};
 
-	static HardCodedInfo *	Instance;
+	static HardCodedInfo *	Instance();
 
 	void drawChokePoints();
 
 	BWAPI::Position getChokepoint(ChokeType type, BWAPI::Player * player);
 };
-*/
