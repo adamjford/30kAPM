@@ -197,17 +197,8 @@ void StrategyManager::setStrategy()
     else
     {
         // otherwise return a random strategy
-
-        std::string enemyName(BWAPI::Broodwar->enemy()->getName());
-        
-        if (enemyName.compare("Skynet") == 0)
-        {
-            currentStrategy = ProtossDarkTemplar;
-        }
-        else
-        {
-            currentStrategy = ProtossZealotRush;
-        }
+        // Hardcoding strategy currently being implemented for now
+        currentStrategy = TerranBunkerBuild;
     }
 
 }
