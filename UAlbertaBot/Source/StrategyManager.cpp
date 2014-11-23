@@ -86,11 +86,13 @@ void StrategyManager::readResults()
     // if the file doesn't exist something is wrong so just set them to default settings
     if (stat(Options::FileIO::FILE_SETTINGS, &buf) == -1)
     {
+        BWAPI::Broodwar->printf("Using default file settings.");
         readDir = "bwapi-data/testio/read/";
         writeDir = "bwapi-data/testio/write/";
     }
     else
     {
+        BWAPI::Broodwar->printf("Reading file settings.");
         std::ifstream f_in(Options::FileIO::FILE_SETTINGS);
         getline(f_in, readDir);
         getline(f_in, writeDir);
@@ -162,6 +164,10 @@ void StrategyManager::writeResults()
 
 void StrategyManager::setStrategy()
 {
+    currentStrategy = TerranMarineRush;
+
+    return;
+
     // if we are using file io to determine strategy, do so
     if (Options::Modules::USING_STRATEGY_IO)
     {

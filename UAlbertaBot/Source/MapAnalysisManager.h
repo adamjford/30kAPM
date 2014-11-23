@@ -6,11 +6,13 @@ class MapAnalysisManager
     MapAnalysisManager();
     ~MapAnalysisManager() { };
 
-public:
     BWTA::Region* home;
     BWTA::Chokepoint* choke;
-    void init();
+
     void analyzeChoke();
+    void runASPSolver();
+public:
+    void init();
 
     static MapAnalysisManager &MapAnalysisManager::Instance()
     {

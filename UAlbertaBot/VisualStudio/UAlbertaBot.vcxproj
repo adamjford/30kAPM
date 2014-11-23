@@ -111,6 +111,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\base\BuildLearner.cpp" />
+    <ClCompile Include="..\Source\base\MapAnalysisManager.cpp" />
     <ClCompile Include="..\Source\CombatSimulation.cpp" />
     <ClCompile Include="..\Source\MicroSearchManager.cpp" />
     <ClCompile Include="..\Source\base\BuildingData.cpp" />
@@ -149,10 +150,10 @@
     <ClCompile Include="..\Source\UnitCommandManager.cpp" />
     <ClCompile Include="..\Source\UnitData.cpp" />
     <ClCompile Include="..\Source\Visualizer.cpp" />
-    <ClCompile Include="MapAnalysisManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Source\base\BuildLearner.h" />
+    <ClInclude Include="..\Source\base\MapAnalysisManager.h" />
     <ClInclude Include="..\Source\CombatSimulation.h" />
     <ClInclude Include="..\Source\MicroSearchManager.h" />
     <ClInclude Include="..\Source\base\BuildingData.h" />
@@ -195,7 +196,6 @@
     <ClInclude Include="..\Source\UnitCommandManager.h" />
     <ClInclude Include="..\Source\UnitData.h" />
     <ClInclude Include="..\Source\Visualizer.h" />
-    <ClInclude Include="MapAnalysisManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

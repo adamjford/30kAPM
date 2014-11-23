@@ -2,6 +2,7 @@
 #include <BWTA.h>
 #include <cassert>
 #include <fstream>
+#include <sstream>
 
 using namespace BWAPI;
 using std::endl;
@@ -22,6 +23,11 @@ bool optimizeGap = true;
 
 std::pair<int, int> findClosestTile(const std::vector<std::pair<int, int>>& tiles);
 std::pair<int, int> findFarthestTile(const std::vector<std::pair<int, int>>& tiles);
+void initClingoProgramSource();
+
+std::vector<std::pair<UnitType, TilePosition> > wallLayout;
+bool wallData = true;
+std::vector<std::pair<BWAPI::UnitType, BWAPI::TilePosition> > _wall;
 
 MapAnalysisManager::MapAnalysisManager()
 {
@@ -31,7 +37,6 @@ void MapAnalysisManager::init()
 {
     BWTA::readMap();
     BWTA::analyze();
-
 
     if (BWTA::getStartLocation(Broodwar->self()) != NULL)
     {
@@ -51,6 +56,12 @@ void MapAnalysisManager::init()
             choke = *c;
         }
     }
+
+    analyzeChoke();
+    initClingoProgramSource();
+    runASPSolver();
+
+    Broodwar->printf("Done analyzing map.");
 }
 
 Unit* pickBuilder()
@@ -137,9 +148,6 @@ void MapAnalysisManager::analyzeChoke()
         if (Broodwar->canBuildHere(builder, pos, UnitTypes::Terran_Barracks, false))
             barracksTiles.push_back(std::make_pair(pos.x(), pos.y()));
     }
-
-
-    return;
 }
 
 void initClingoProgramSource()
@@ -147,7 +155,7 @@ void initClingoProgramSource()
     std::ofstream file;
 
     // opens file for editing, and any contents that existed beforehand is discarded
-    file.open("bwapi-data/write/ITUBotWall.txt", std::ios::out | std::ios::trunc);
+    file.open("../write/ITUBotWall.txt", std::ios::out | std::ios::trunc);
 
     if (file.is_open())
     {
@@ -326,6 +334,97 @@ void initClingoProgramSource()
     {
         Broodwar->printf("Error Opening File");
     }
+}
+
+void MapAnalysisManager::runASPSolver()
+{
+    system("./clingo.exe ../write/ITUBotWall.txt > ../write/out.txt");
+
+    std::vector<std::string> lines;
+    std::string line;
+    unsigned lineCounter = 0;
+    std::ifstream file("../write/out.txt");
+    if (file.is_open())
+    {
+        while (getline(file, line))
+        {
+            if (*(line.end() - 1) == '\r')
+                line.erase(line.end() - 1);
+            lines.push_back(line);
+            if (line == "OPTIMUM FOUND")
+            {
+                line = lines[lineCounter - 2]; // contains final answer that will be parsed
+                break;
+            }
+            if (line == "UNSATISFIABLE")
+            { // error in solver
+                Broodwar->printf("Solver failed finding a solution!");
+                return;
+            }
+            lineCounter++;
+        }
+
+        // parse the answer, example output below
+        // place(supplyDepot1,119,46) place(supplyDepot2,122,44) place(barracks1,116,52) 
+        std::stringstream ss;
+        std::string token;
+        while (line != "")
+        { // tokenizin the whole line
+            std::vector<int> coords;
+            UnitType type;
+            int val;
+
+
+            ss << line.substr(6, line.find(")") - 6); // place( = 6 chars
+            while (getline(ss, token, ','))
+            { // tokenizing the individual place() statements
+                std::istringstream iss(token);
+                iss >> val;
+
+                if (iss.fail())
+                {
+                    size_t found = token.find("supplyDepot"); // search for supply depot
+
+                    // if found its supply depot, if not found its barracks (early wall)
+                    type = found != std::string::npos ? UnitTypes::Terran_Supply_Depot : UnitTypes::Terran_Barracks;
+                }
+                else
+                { // coordinates
+                    coords.push_back(val);
+                }
+            }
+
+            // erase the parsed part including the closing parenthesis and space
+            line.erase(0, line.find(")") + 2);
+
+            // clear buffers
+            ss.clear();
+            token.clear();
+
+            // add the result to data structure after successful parsing for each place() statement
+            wallLayout.push_back(std::make_pair(type, TilePosition(coords[0], coords[1])));
+        }
+
+        // save results into bots memory
+        _wall = wallLayout;
+
+        file.close();
+
+        // finally, add choke point width to the output file
+        std::ofstream oFile("D:/SCAI/IT_WORKS/StarCraft/bwapi-data/AI/out.txt", std::ios::app);
+
+        if (oFile.is_open())
+        {
+            oFile << "Choke Width: " << choke->getWidth() << endl;
+            oFile.close();
+        }
+        else
+        {
+            Broodwar->printf("Error opening output file");
+        }
+    }
+    else
+        Broodwar->printf("** ERROR OPENING SOLVER OUTPUT FILE");
 }
 
 std::pair<int, int> findClosestTile(const std::vector<std::pair<int, int>>& tiles)

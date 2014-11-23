@@ -12,7 +12,7 @@
 
 #include "Common.h"
 #include "UAlbertaBotModule.h"
-#include "../VisualStudio/MapAnalysisManager.h"
+#include "base/MapAnalysisManager.h"
 
 
 BWAPI::AIModule * __NewAIModule()

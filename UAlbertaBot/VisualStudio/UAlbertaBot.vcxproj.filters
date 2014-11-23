@@ -165,7 +165,7 @@
     <ClCompile Include="..\Source\Visualizer.cpp">
       <Filter>extra</Filter>
     </ClCompile>
-    <ClCompile Include="MapAnalysisManager.cpp">
+    <ClCompile Include="..\Source\base\MapAnalysisManager.cpp">
       <Filter>game\macro\managers</Filter>
     </ClCompile>
   </ItemGroup>
@@ -299,7 +299,7 @@
     <ClInclude Include="..\Source\Visualizer.h">
       <Filter>extra</Filter>
     </ClInclude>
-    <ClInclude Include="MapAnalysisManager.h">
+    <ClInclude Include="..\Source\base\MapAnalysisManager.h">
       <Filter>game\macro\managers</Filter>
     </ClInclude>
   </ItemGroup>
