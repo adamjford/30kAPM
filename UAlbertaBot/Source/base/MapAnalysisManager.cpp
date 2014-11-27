@@ -174,15 +174,15 @@ void MapAnalysisManager::initClingoProgramSource()
     std::string writeFile = writeDir + "ITUBotWall.txt";
     std::ofstream file(writeFile.c_str());
 
-        file << "% Building / Unit types" << endl
+    file << "% Building / Unit types" << endl
             << "buildingType(marineType).	" << endl
             << "buildingType(barracksType)." << endl
-            << "buildingType(supplyDepotType).	" << endl << endl
+            << "buildingType(supplyDepotType).	" << endl  << endl
 
             << "% Size specifications" << endl
             << "width(marineType,1).	height(marineType,1)." << endl
             << "width(barracksType,4).	height(barracksType,3)." << endl
-            << "width(supplyDepotType,3). 	height(supplyDepotType,2)." << endl << endl
+            << "width(supplyDepotType,3). 	height(supplyDepotType,2)." << endl	 << endl
 
             << "costs(supplyDepotType, 100)." << endl
             << "costs(barracksType, 150)." << endl
@@ -190,32 +190,32 @@ void MapAnalysisManager::initClingoProgramSource()
             << "% Gaps" << endl
             << "leftGap(barracksType,16). 	rightGap(barracksType,7).	topGap(barracksType,8). 	bottomGap(barracksType,15)." << endl
             << "leftGap(marineType,0). 		rightGap(marineType,0). 	topGap(marineType,0). 		bottomGap(marineType,0)." << endl
-            << "leftGap(supplyDepotType,10).		 rightGap(supplyDepotType,9). 	topGap(supplyDepotType,10). 		bottomGap(supplyDepotType,5)." << endl << endl
+            << "leftGap(supplyDepotType,10).		 rightGap(supplyDepotType,9). 	topGap(supplyDepotType,10). 		bottomGap(supplyDepotType,5)." << endl	 << endl
 
             << "% Facts" << endl
             << "building(marine1).	type(marine1, marineType)." << endl
-            << "building(barracks1).	type(barracks1, barracksType)." << endl
+            << "building(barracks1).	type(barracks1, barracksType)." << endl		
             << "building(barracks2).	type(barracks2, barracksType)." << endl
             << "building(supplyDepot1).	type(supplyDepot1, supplyDepotType)." << endl
-            << "building(supplyDepot2).	type(supplyDepot2, supplyDepotType)." << endl
-            << "building(supplyDepot4).	type(supplyDepot4, supplyDepotType)." << endl
+            << "building(supplyDepot2).	type(supplyDepot2, supplyDepotType)." << endl 
+            << "building(supplyDepot4).	type(supplyDepot4, supplyDepotType)." << endl   
             << "building(supplyDepot3).	type(supplyDepot3, supplyDepotType)." << endl << endl
-
+                                  
             << "% Constraint: two units/buildings cannot occupy the same tile" << endl
-            << ":- occupiedBy(B1, X, Y), occupiedBy(B2, X, Y), B1 != B2." << endl << endl
-
+            << ":- occupiedBy(B1, X, Y), occupiedBy(B2, X, Y), B1 != B2." << endl	  << endl
+                 
             << "% Tiles occupied by buildings" << endl
             << "occupiedBy(B,X2,Y2) :- place(B, X1, Y1)," << endl
             << "						type(B, BT), width(BT,Z), height(BT, Q)," << endl
             << "						X2 >= X1, X2 < X1+Z, Y2 >= Y1, Y2 < Y1+Q," << endl
             << "						walkableTile(X2, Y2)." << endl
-            << "						" << endl << endl
+            << "						" << endl  << endl
 
             << "% Gaps between two adjacent tiles, occupied by buildings." << endl
             << "verticalGap(X1,Y1,X2,Y2,G) :-" << endl
             << "	occupiedBy(B1,X1,Y1), occupiedBy(B2,X2,Y2)," << endl
             << "	B1 != B2, X1=X2, Y1=Y2-1, G=S1+S2," << endl
-            << "	type(B1,T1), type(B2,T2), bottomGap(T1,S1), topGap(T2,S2)." << endl
+            << "	type(B1,T1), type(B2,T2), bottomGap(T1,S1), topGap(T2,S2)." << endl 
             << "	" << endl
             << "verticalGap(X1,Y1,X2,Y2,G) :-" << endl
             << "	occupiedBy(B1,X1,Y1), occupiedBy(B2,X2,Y2)," << endl
@@ -225,49 +225,46 @@ void MapAnalysisManager::initClingoProgramSource()
             << "horizontalGap(X1,Y1,X2,Y2,G) :-" << endl
             << "	occupiedBy(B1,X1,Y1), occupiedBy(B2,X2,Y2)," << endl
             << "	B1 != B2, X1=X2-1, Y1=Y2, G=S1+S2," << endl
-            << "	type(B1,T1), type(B2,T2), rightGap(T1,S1), leftGap(T2,S2)." << endl << endl
+            << "	type(B1,T1), type(B2,T2), rightGap(T1,S1), leftGap(T2,S2)." << endl		 << endl
 
             << "horizontalGap(X1,Y1,X2,Y2,G) :-" << endl
             << "	occupiedBy(B1,X1,Y1), occupiedBy(B2,X2,Y2)," << endl
             << "	B1 != B2, X1=X2+1, Y1=Y2, G=S1+S2," << endl
-            << "	type(B1,T1), type(B2,T2), rightGap(T2,S2), leftGap(T1,S1)." << endl << endl
+            << "	type(B1,T1), type(B2,T2), rightGap(T2,S2), leftGap(T1,S1)." << endl<< endl
 
             << "cost(B, C) :- place(B, X, Y), type(B, BT), costs(BT, COST), C=COST." << endl
 
             ///////////////
             << "% Tile information" << endl;
 
-        for (std::vector<std::pair<int, int>>::const_iterator it = walkableTiles.begin();
-             it != walkableTiles.end(); ++it)
-        {
-            file << "walkableTile(" << it->first << ", " << it->second << ")." << endl;
-        }
+            for(std::vector<std::pair<int, int> >::const_iterator it = walkableTiles.begin();
+                it != walkableTiles.end(); ++it){
+                file << "walkableTile(" << it->first << ", " << it->second << ")." << endl;
+            }
 
-        for (std::vector<std::pair<int, int>>::const_iterator it = barracksTiles.begin();
-             it != barracksTiles.end(); ++it)
-        {
-            file << "buildable(barracksType, " << it->first << ", " << it->second << ")." << endl;
-        }
+            for(std::vector<std::pair<int, int> >::const_iterator it = barracksTiles.begin();
+                it != barracksTiles.end(); ++it){
+                file << "buildable(barracksType, " << it->first << ", " << it->second << ")." << endl;
+            }
 
-        for (std::vector<std::pair<int, int>>::const_iterator it = supplyTiles.begin();
-             it != supplyTiles.end(); ++it)
-        {
-            file << "buildable(supplyDepotType, " << it->first << ", " << it->second << ")." << endl;
-        }
-        ////////////////////////
+            for(std::vector<std::pair<int, int> >::const_iterator it = supplyTiles.begin();
+                it != supplyTiles.end(); ++it){
+                file << "buildable(supplyDepotType, " << it->first << ", " << it->second << ")." << endl;
+            }
+            ////////////////////////
 
-        insideBase = findClosestTile(buildTiles);
-        outsideBase = findFarthestTile(outsideTiles);
-        file << endl << "insideBase(" << insideBase.first << ", " << insideBase.second << ").\t";
-        file << "outsideBase(" << outsideBase.first << ", " << outsideBase.second << ")." << endl << endl
+            insideBase = findClosestTile(buildTiles);
+            outsideBase = findFarthestTile(outsideTiles);
+            file << endl << "insideBase(" << insideBase.first << ", " << insideBase.second << ").\t";
+            file << "outsideBase(" << outsideBase.first << ", " << outsideBase.second << ")." << endl << endl
 
 
             << "% Constraint: Inside of the base must not be reachable." << endl
-            << ":- insideBase(X2,Y2), outsideBase(X1,Y1), canReach(X2,Y2)." << endl << endl
+            << ":- insideBase(X2,Y2), outsideBase(X1,Y1), canReach(X2,Y2)." << endl	<< endl
 
             << "% Reachability between tiles." << endl
             << "blocked(X,Y) :- occupiedBy(B,X,Y), building(B), walkableTile(X,Y)." << endl
-            << "canReach(X,Y) :- outsideBase(X,Y)." << endl << endl
+            << "canReach(X,Y) :- outsideBase(X,Y)." << endl	 << endl
 
             << "canReach(X2,Y) :-" << endl
             << "	canReach(X1,Y), X1=X2+1, walkableTile(X1,Y), walkableTile(X2,Y)," << endl
@@ -292,7 +289,7 @@ void MapAnalysisManager::initClingoProgramSource()
             << "	not blocked(X1,Y1), not blocked(X2,Y2)." << endl
             << "canReach(X2,Y2) :-" << endl
             << "	canReach(X1,Y1), X1=X2-1, Y1=Y2-1, walkableTile(X1,Y1), walkableTile(X2,Y2)," << endl
-            << "	not blocked(X1,Y1), not blocked(X2,Y2)." << endl << endl
+            << "	not blocked(X1,Y1), not blocked(X2,Y2)." << endl	   << endl
 
             << "% Using gaps to reach (walk on) blocked locations." << endl
             << "enemyUnitX(32). enemyUnitY(32)." << endl
@@ -309,39 +306,37 @@ void MapAnalysisManager::initClingoProgramSource()
             //<< ":- not place(supplyDepot2, X, Y), not place(barracks2, X, Y)." << endl	// unsafe variables X & Y
 
             << "% Generate all the potential placements." << endl
-            << "1[place(barracks1,X,Y) : buildable(barracksType,X,Y)]1." << endl
-            << "0[place(barracks2,X,Y) : buildable(barracksType,X,Y)]1." << endl
+            << "1[place(barracks1,X,Y) : buildable(barracksType,X,Y)]1." << endl 
+            << "0[place(barracks2,X,Y) : buildable(barracksType,X,Y)]1." << endl 
 
             << "1[place(supplyDepot1,X,Y) : buildable(supplyDepotType,X,Y)]1." << endl
             << "0[place(supplyDepot2,X,Y) : buildable(supplyDepotType,X,Y)]1." << endl
-            << "0[place(supplyDepot3,X,Y) : buildable(supplyDepotType,X,Y)]1." << endl
+            << "0[place(supplyDepot3,X,Y) : buildable(supplyDepotType,X,Y)]1." << endl	    
             << "0[place(supplyDepot4,X,Y) : buildable(supplyDepotType,X,Y)]1." << endl << endl
+                                                                  
+            << "% Optimization criterion" << endl;	
 
-            << "% Optimization criterion" << endl;
-
-        if (optimizeGap)
-        {
-            file << "#minimize [horizontalGap(X1,Y1,X2,Y2,G) = G @1 ]." << endl
+            if(optimizeGap){
+                file << "#minimize [horizontalGap(X1,Y1,X2,Y2,G) = G @1 ]." << endl	
                 << "#minimize [verticalGap(X1,Y1,X2,Y2,G) = G @1 ]." << endl
-                << "#minimize [place(supplyDepot2,X,Y) @2]." << endl
-                << "#minimize [place(supplyDepot3,X,Y) @2]." << endl
-                << "#minimize [place(supplyDepot4,X,Y) @2]." << endl
-                << "#minimize [place(barracks2,X,Y) @2]. " << endl << endl;
-        }
-        else
-        {
-            file << "#minimize [cost(B, C) = C]." << endl;
-        }
+                << "#minimize [place(supplyDepot2,X,Y) @2]." << endl       
+                << "#minimize [place(supplyDepot3,X,Y) @2]." << endl	
+                << "#minimize [place(supplyDepot4,X,Y) @2]." << endl	
+                << "#minimize [place(barracks2,X,Y) @2]. " << endl	 << endl;	 
+            }
+            else
+                file << "#minimize [cost(B, C) = C]." << endl;
 
 
-        file << "#hide." << endl
+            file << "#hide." << endl
             << "#show place/3." << endl;
 
-        Broodwar->printf("ASP Solver Contents Ready!");
 
-        optimizeGap ? Broodwar->printf("Optimization: GAP")
-            : Broodwar->printf("Optimization: COST");
 
+        BWAPI::Broodwar->printf("ASP Solver Contents Ready!");
+
+        optimizeGap ? BWAPI::Broodwar->printf("Optimization: GAP") 
+                    : BWAPI::Broodwar->printf("Optimization: COST");
 
         file.close();
 }
