@@ -52,14 +52,14 @@ void ScoutManager::moveScouts()
 	if (workerScout->isUnderAttack() && (scoutRegion == enemyRegion))
 	{
 		//if (!scoutUnderAttack)
-			BWAPI::Broodwar->printf("Scout under attack");
+			//BWAPI::Broodwar->printf("Scout under attack");
 		scoutUnderAttack = true;
 	}
 
 	if (!workerScout->isUnderAttack() && !enemyInRadius())
 	{
 		//if (scoutUnderAttack)
-			BWAPI::Broodwar->printf("Scout no longer under attack");
+			//BWAPI::Broodwar->printf("Scout no longer under attack");
 		scoutUnderAttack = false;
 	}
 
