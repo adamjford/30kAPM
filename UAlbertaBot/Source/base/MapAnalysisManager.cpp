@@ -33,6 +33,17 @@ std::vector<std::pair<BWAPI::UnitType, BWAPI::TilePosition> > _wall;
 
 MapAnalysisManager::MapAnalysisManager()
 {
+    // read in the name of the read and write directories from settings file
+    struct stat buf;
+
+    // if the file doesn't exist something is wrong so just set them to default settings
+    if (stat(Options::FileIO::FILE_SETTINGS, &buf) != -1)
+    {
+        std::ifstream f_in(Options::FileIO::FILE_SETTINGS);
+        getline(f_in, readDir);
+        getline(f_in, writeDir);
+        f_in.close();
+    }
 }
 
 void MapAnalysisManager::findChokeWithSmallestGap()
@@ -160,18 +171,6 @@ void MapAnalysisManager::analyzeChoke()
 
 void MapAnalysisManager::initClingoProgramSource()
 {
-    // read in the name of the read and write directories from settings file
-    struct stat buf;
-
-    // if the file doesn't exist something is wrong so just set them to default settings
-    if (stat(Options::FileIO::FILE_SETTINGS, &buf) != -1)
-    {
-        std::ifstream f_in(Options::FileIO::FILE_SETTINGS);
-        getline(f_in, readDir);
-        getline(f_in, writeDir);
-        f_in.close();
-    }
-
     std::string writeFile = writeDir + "ITUBotWall.txt";
     std::ofstream file(writeFile.c_str());
 
@@ -349,12 +348,20 @@ void MapAnalysisManager::initClingoProgramSource()
 
 void MapAnalysisManager::runASPSolver()
 {
-    system("./clingo.exe ../write/ITUBotWall.txt > ../write/out.txt");
+    std::string clingo = "bwapi-data\\AI\\clingo.exe ";
+    std::string problemPart = "ITUBotWall.txt > ";
+    std::string outputPart = "out.txt";
+
+    std::string combined = (clingo + writeDir + problemPart + writeDir + outputPart);
+
+    Broodwar->printf(combined.c_str());
+
+    system(combined.c_str());
 
     std::vector<std::string> lines;
     std::string line;
     unsigned lineCounter = 0;
-    std::ifstream file("../write/out.txt");
+    std::ifstream file((writeDir + outputPart).c_str());
     if (file.is_open())
     {
         while (getline(file, line))
