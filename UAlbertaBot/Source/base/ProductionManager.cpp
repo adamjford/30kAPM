@@ -87,6 +87,7 @@ void ProductionManager::update()
         queue.queueAsHighestPriority(MetaType(BWAPI::Broodwar->self()->getRace().getSupplyProvider()), true);
     }
 
+/*
     // if they have cloaked units get a new goal asap
     if (!enemyCloakedDetected && InformationManager::Instance().enemyHasCloakedUnits())
     {
@@ -104,7 +105,7 @@ void ProductionManager::update()
         BWAPI::Broodwar->printf("Enemy Cloaked Unit Detected!");
         enemyCloakedDetected = true;
     }
-
+*/
 
 //	if (Options::Debug::DRAW_UALBERTABOT_DEBUG) BWAPI::Broodwar->drawTextScreen(447, 17, "\x07 %d", BuildingManager::Instance().getReservedMinerals());
 }
