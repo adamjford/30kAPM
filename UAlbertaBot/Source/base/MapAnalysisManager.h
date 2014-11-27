@@ -4,12 +4,18 @@
 class MapAnalysisManager
 {
     MapAnalysisManager();
+    void findChokeWithSmallestGap();
+
     ~MapAnalysisManager() { };
 
     BWTA::Region* home;
     BWTA::Chokepoint* choke;
 
+    std::string					readDir;
+    std::string					writeDir;
+
     void analyzeChoke();
+    void initClingoProgramSource();
     void runASPSolver();
 public:
     void init();

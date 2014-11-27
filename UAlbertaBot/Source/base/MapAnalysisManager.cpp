@@ -1,3 +1,5 @@
+#include "Common.h"
+#include <sys/stat.h>
 #include "MapAnalysisManager.h"
 #include <BWTA.h>
 #include <cassert>
@@ -33,6 +35,24 @@ MapAnalysisManager::MapAnalysisManager()
 {
 }
 
+void MapAnalysisManager::findChokeWithSmallestGap()
+{
+    std::set<BWTA::Chokepoint*> chokepoints = home->getChokepoints();
+    double min_length = 10000;
+
+    // iterate through all chokepoints and look for the one with the smallest gap (least width)
+
+    for (std::set<BWTA::Chokepoint*>::iterator c = chokepoints.begin(); c != chokepoints.end(); ++c)
+    {
+        double length = (*c)->getWidth();
+        if (length < min_length || choke == NULL)
+        {
+            min_length = length;
+            choke = *c;
+        }
+    }
+}
+
 void MapAnalysisManager::init()
 {
     BWTA::readMap();
@@ -43,19 +63,7 @@ void MapAnalysisManager::init()
         home = BWTA::getStartLocation(Broodwar->self())->getRegion();
     }
 
-    std::set<BWTA::Chokepoint*> chokepoints = home->getChokepoints();
-    double min_length = 10000;
-
-    // iterate through all chokepoints and look for the one with the smallest gap (least width)
-    for (std::set<BWTA::Chokepoint*>::iterator c = chokepoints.begin(); c != chokepoints.end(); ++c)
-    {
-        double length = (*c)->getWidth();
-        if (length < min_length || choke == NULL)
-        {
-            min_length = length;
-            choke = *c;
-        }
-    }
+    findChokeWithSmallestGap();
 
     analyzeChoke();
     initClingoProgramSource();
@@ -135,7 +143,7 @@ void MapAnalysisManager::analyzeChoke()
 
     Unit* builder = pickBuilder();
 
-    assert(builderr != NULL);
+    assert(builder != NULL);
 
     // analyze buildable tiles for buildings that we will use to wall in (barracks and supply depot)
     for (unsigned i = 0; i < buildTiles.size(); ++i)
@@ -150,15 +158,23 @@ void MapAnalysisManager::analyzeChoke()
     }
 }
 
-void initClingoProgramSource()
+void MapAnalysisManager::initClingoProgramSource()
 {
-    std::ofstream file;
+    // read in the name of the read and write directories from settings file
+    struct stat buf;
 
-    // opens file for editing, and any contents that existed beforehand is discarded
-    file.open("../write/ITUBotWall.txt", std::ios::out | std::ios::trunc);
-
-    if (file.is_open())
+    // if the file doesn't exist something is wrong so just set them to default settings
+    if (stat(Options::FileIO::FILE_SETTINGS, &buf) != -1)
     {
+        std::ifstream f_in(Options::FileIO::FILE_SETTINGS);
+        getline(f_in, readDir);
+        getline(f_in, writeDir);
+        f_in.close();
+    }
+
+    std::string writeFile = writeDir + "ITUBotWall.txt";
+    std::ofstream file(writeFile.c_str());
+
         file << "% Building / Unit types" << endl
             << "buildingType(marineType).	" << endl
             << "buildingType(barracksType)." << endl
@@ -329,11 +345,6 @@ void initClingoProgramSource()
 
 
         file.close();
-    }
-    else
-    {
-        Broodwar->printf("Error Opening File");
-    }
 }
 
 void MapAnalysisManager::runASPSolver()

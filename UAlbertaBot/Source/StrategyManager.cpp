@@ -86,13 +86,11 @@ void StrategyManager::readResults()
     // if the file doesn't exist something is wrong so just set them to default settings
     if (stat(Options::FileIO::FILE_SETTINGS, &buf) == -1)
     {
-        BWAPI::Broodwar->printf("Using default file settings.");
         readDir = "bwapi-data/testio/read/";
         writeDir = "bwapi-data/testio/write/";
     }
     else
     {
-        BWAPI::Broodwar->printf("Reading file settings.");
         std::ifstream f_in(Options::FileIO::FILE_SETTINGS);
         getline(f_in, readDir);
         getline(f_in, writeDir);
@@ -137,8 +135,9 @@ void StrategyManager::readResults()
         f_in.close();
     }
 
-    BWAPI::Broodwar->printf("Results (%s): (%d %d) (%d %d) (%d %d)", BWAPI::Broodwar->enemy()->getName().c_str(), 
-        results[0].first, results[0].second, results[1].first, results[1].second, results[2].first, results[2].second);
+
+    //BWAPI::Broodwar->printf("Results (%s): (%d %d) (%d %d) (%d %d)", BWAPI::Broodwar->enemy()->getName().c_str(), 
+    //   results[0].first, results[0].second, results[1].first, results[1].second, results[2].first, results[2].second);
 }
 
 void StrategyManager::writeResults()
@@ -643,21 +642,18 @@ const MetaPairVector StrategyManager::getProtossZealotRushBuildOrderGoal() const
 const MetaPairVector StrategyManager::getTerranMarineRushBuildOrderGoal() const
 {
     // the goal to return
-    std::vector< std::pair<MetaType, UnitCountType> > goal;
+    MetaPairVector goal;
 
     int numMarines =			BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Marine);
     int numMedics =				BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Medic);
-    int numWraith =				BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Wraith);
 
     int marinesWanted = numMarines + 12;
     int medicsWanted = numMedics + 2;
-    int wraithsWanted = numWraith + 4;
 
     goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Marine,	marinesWanted));
     goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Medic,	    medicsWanted));
-    goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Wraith,	wraithsWanted));
 
-    return (const std::vector< std::pair<MetaType, UnitCountType> >)goal;
+    return goal;
 }
 
 void StrategyManager::addTerranDetectorToGoal(std::vector<std::pair<MetaType, unsigned char>>& goal) const
