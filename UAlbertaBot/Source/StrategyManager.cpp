@@ -31,7 +31,7 @@ void StrategyManager::addStrategies()
     //protossOpeningBook[ProtossDarkTemplar]	= "0 0 0 0 1 3 0 7 5 0 0 12 3 13 0 22 22 22 22 0 1 0";
     protossOpeningBook[ProtossDarkTemplar] = "0 0 0 0 1 0 3 0 7 0 5 0 12 0 13 3 22 22 1 22 22 0 1 0";
     protossOpeningBook[ProtossDragoons] = "0 0 0 0 1 0 0 3 0 7 0 0 5 0 0 3 8 6 1 6 6 0 3 1 0 6 6 6";
-    terranOpeningBook[TerranMarineRush] = "0 0 0 0 0 1 0 0 3 0 0 3 0 1 0 4 0 0 0 6";
+    terranOpeningBook[TerranMarineRush] = "0 0 0 0 0 1 0 0 3 0 0 3 0 1 0 5 4";
     zergOpeningBook[ZergZerglingRush] = "0 0 0 0 0 1 0 0 0 2 3 5 0 0 0 0 0 0 1 6";
 
     if (selfRace == BWAPI::Races::Protoss)
@@ -619,18 +619,16 @@ const MetaPairVector StrategyManager::getProtossZealotRushBuildOrderGoal() const
 const MetaPairVector StrategyManager::getTerranBuildOrderGoal() const
 {
     // the goal to return
-    std::vector<std::pair<MetaType, UnitCountType>> goal;
+    MetaPairVector goal;
 
     int numMarines = BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Marine);
     int numMedics = BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Medic);
-    int numWraith = BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Wraith);
 
     int marinesWanted = numMarines + 12;
     int medicsWanted = numMedics + 2;
-    int wraithsWanted = numWraith + 4;
 
-    if ((BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Marine) > 5)
-        && (BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Academy) < 1))
+    // if our Academy got blown up, rebuild it
+    if (BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Academy) < 1)
     {
         goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Academy, 1));
     }
@@ -638,7 +636,7 @@ const MetaPairVector StrategyManager::getTerranBuildOrderGoal() const
     if ((BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Academy) > 0))
     {
         // If U238 Shells are not researched and are not being researched, do it
-        if (BWAPI::Broodwar->self()->gas() == 150 && (BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::U_238_Shells) < 1))
+        if ((BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::U_238_Shells) < 1))
         {
             goal.push_back(MetaPair(BWAPI::UpgradeTypes::U_238_Shells, 1));
         }
@@ -649,11 +647,20 @@ const MetaPairVector StrategyManager::getTerranBuildOrderGoal() const
         {
             goal.push_back(MetaPair(BWAPI::TechTypes::Stim_Packs, 1));
         }
+
+        // If we've got some medics, grab the energy upgrade
+        if ((BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Medic) > 1)
+            && (BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::Caduceus_Reactor) < 1))
+        {
+
+                goal.push_back(MetaPair(BWAPI::UpgradeTypes::Caduceus_Reactor, 1));
+        }
     }
 
     goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Marine, marinesWanted));
+    goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Medic, medicsWanted));
 
-    return (const std::vector<std::pair<MetaType, UnitCountType>>)goal;
+    return goal;
 }
 
 const MetaPairVector StrategyManager::getZergBuildOrderGoal() const

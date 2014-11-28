@@ -97,6 +97,8 @@ class StarcraftData {
 			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Factory, actions.size()));
 			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Starport, actions.size()));
 			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Wraith, actions.size()));
+			actions.push_back(StarcraftAction(BWAPI::UpgradeTypes::U_238_Shells, actions.size()));
+			actions.push_back(StarcraftAction(BWAPI::UpgradeTypes::Caduceus_Reactor, actions.size()));
 		}
 		else if (r == BWAPI::Races::Zerg)
 		{
