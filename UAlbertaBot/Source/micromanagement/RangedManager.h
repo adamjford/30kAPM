@@ -20,4 +20,7 @@ public:
 	BWAPI::Unit * getTarget(BWAPI::Unit * rangedUnit, UnitVector & targets);
 
 	void kiteTarget(BWAPI::Unit * rangedUnit, BWAPI::Unit * target);
+
+	// for Marines
+	void useStimpack(BWAPI::Unit * rangedUnit);
 };

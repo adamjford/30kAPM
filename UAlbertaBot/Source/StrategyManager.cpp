@@ -631,6 +631,29 @@ const MetaPairVector StrategyManager::getTerranBuildOrderGoal() const
 	int medicsWanted = numMedics + 2;
 	int wraithsWanted = numWraith + 4;
 
+		if ((BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Marine) > 5) 
+		&& (BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Academy) < 1))
+	{
+		goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Academy, 1));
+	}
+
+	if ((BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Academy) > 0))
+	{
+		
+		// If U238 Shells are not researched and are not being researched, do it
+		if (BWAPI::Broodwar->self()->gas() == 150 && (BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::U_238_Shells) < 1))
+		{
+			goal.push_back(MetaPair(BWAPI::UpgradeTypes::U_238_Shells, 1));
+		}
+
+		// If stimpacks are not researched and are not being researched, do it
+		if (!BWAPI::Broodwar->self()->hasResearched(BWAPI::TechTypes::Stim_Packs) &&
+			!BWAPI::Broodwar->self()->isResearching(BWAPI::TechTypes::Stim_Packs))
+		{
+			goal.push_back(MetaPair(BWAPI::TechTypes::Stim_Packs, 1));
+		}
+	}
+
 	goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Marine,	marinesWanted));
 
 	return (const std::vector< std::pair<MetaType, UnitCountType> >)goal;

@@ -65,6 +65,15 @@ void RangedManager::kiteTarget(BWAPI::Unit * rangedUnit, BWAPI::Unit * target)
 		range = 6*32;
 	}
 
+	// see if we can use stim pack
+	BWAPI::UnitType targetType = target->getType();
+	if (((targetType == BWAPI::UnitTypes::Protoss_Zealot) || (targetType == BWAPI::UnitTypes::Zerg_Zergling)
+		|| (targetType == BWAPI::UnitTypes::Zerg_Mutalisk))
+		&& (target->isInWeaponRange(rangedUnit)))
+	{
+		useStimpack(rangedUnit);
+	}
+	
 	// determine whether the target can be kited
 	if (range <= target->getType().groundWeapon().maxRange())
 	{
@@ -73,7 +82,7 @@ void RangedManager::kiteTarget(BWAPI::Unit * rangedUnit, BWAPI::Unit * target)
 		return;
 	}
 
-	double		minDist(64);
+	double		minDist(67);
 	bool		kite(true);
 	double		dist(rangedUnit->getDistance(target));
 	double		speed(rangedUnit->getType().topSpeed());
@@ -109,6 +118,20 @@ void RangedManager::kiteTarget(BWAPI::Unit * rangedUnit, BWAPI::Unit * target)
 	else
 	{
 		smartAttackUnit(rangedUnit, target);
+	}
+}
+
+void RangedManager::useStimpack(BWAPI::Unit * rangedUnit)
+{
+	if ((BWAPI::Broodwar->self()->hasResearched(BWAPI::TechTypes::Stim_Packs))
+		&& (rangedUnit->getHitPoints() > 30)
+		&& (rangedUnit->getStimTimer() == 0))
+	{
+		rangedUnit->useTech(BWAPI::TechTypes::Stim_Packs);
+	}
+	else
+	{
+		return;
 	}
 }
 
