@@ -15,12 +15,13 @@ class WorkerManager {
 
 	int							workersPerRefinery;
 
-	void						setMineralWorker(BWAPI::Unit * unit);
 
 	WorkerManager();
 
 public:
 
+
+	void						setMineralWorker(BWAPI::Unit * unit);
 	void						update();
 	void						onUnitDestroy(BWAPI::Unit * unit);
 	void						onUnitMorph(BWAPI::Unit * unit);
