@@ -1,13 +1,18 @@
 #include "Common.h"
 #include "ScoutManager.h"
 #include "InformationManager.h"
+#include "base/WorkerManager.h"
 
-ScoutManager::ScoutManager() : workerScout(NULL), numWorkerScouts(0), scoutUnderAttack(false)
+ScoutManager::ScoutManager() : workerScout(NULL), numWorkerScouts(0), scoutUnderAttack(false), doneScouting(false)
 {
 }
 
 void ScoutManager::update(const std::set<BWAPI::Unit *> & scoutUnits)
 {
+	if (doneScouting)
+	{
+		return;
+	}
 	if (scoutUnits.size() == 1)
 	{
 		BWAPI::Unit * scoutUnit = *scoutUnits.begin();
@@ -31,7 +36,7 @@ void ScoutManager::moveScouts()
 	{
 		return;
 	}
-
+	
 	// get the enemy base location, if we have one
 	BWTA::BaseLocation * enemyBaseLocation = InformationManager::Instance().getMainBaseLocation(BWAPI::Broodwar->enemy());
 
@@ -46,11 +51,15 @@ void ScoutManager::moveScouts()
 	// this ignores if their scout worker attacks it on the way to their base
 	if (workerScout->isUnderAttack() && (scoutRegion == enemyRegion))
 	{
+		//if (!scoutUnderAttack)
+			//BWAPI::Broodwar->printf("Scout under attack");
 		scoutUnderAttack = true;
 	}
 
-	if (!workerScout->isUnderAttack() && !enemyWorkerInRadius())
+	if (!workerScout->isUnderAttack() && !enemyInRadius())
 	{
+		//if (scoutUnderAttack)
+			//BWAPI::Broodwar->printf("Scout no longer under attack");
 		scoutUnderAttack = false;
 	}
 
@@ -60,6 +69,7 @@ void ScoutManager::moveScouts()
 		// if the scout is in the enemy region
 		if (scoutRegion == enemyRegion)
 		{
+			
 			std::vector<GroundThreat> groundThreats;
 			fillGroundThreats(groundThreats, workerScout->getPosition());
 
@@ -88,7 +98,8 @@ void ScoutManager::moveScouts()
 			// if the worker scout is under attack
 			else
 			{
-				BWAPI::Position fleeTo = calcFleePosition(groundThreats, NULL);
+				/*BWAPI::Position fleeTo = calcFleePosition(groundThreats, BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()));
+				//BWAPI::Position fleeTo = BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation());
 				if (Options::Debug::DRAW_UALBERTABOT_DEBUG) BWAPI::Broodwar->drawCircleMap(fleeTo.x(), fleeTo.y(), 10, BWAPI::Colors::Red);
 
 				BOOST_FOREACH (BWAPI::Unit * unit, BWAPI::Broodwar->getUnitsInRadius(fleeTo, 10))
@@ -96,8 +107,13 @@ void ScoutManager::moveScouts()
 					if (Options::Debug::DRAW_UALBERTABOT_DEBUG) BWAPI::Broodwar->drawCircleMap(unit->getPosition().x(), unit->getPosition().y(), 5, BWAPI::Colors::Cyan, true);
 				}
 
-				smartMove(workerScout, fleeTo);
+				smartMove(workerScout, fleeTo);*/
+				BWAPI::Broodwar->printf("Done scouting");
+				smartMove(workerScout, BWAPI::Position(BWAPI::Broodwar->self()->getStartLocation()));
+				doneScouting = true;
+				WorkerManager::Instance().setMineralWorker(workerScout);
 			}
+			
 		}
 		// if the scout is not in the enemy region
 		else if (scoutUnderAttack)
@@ -128,7 +144,7 @@ void ScoutManager::moveScouts()
 	}
 }
 
-BWAPI::Position ScoutManager::calcFleePosition(const std::vector<GroundThreat> & threats, BWAPI::Unit * target) 
+BWAPI::Position ScoutManager::calcFleePosition(const std::vector<GroundThreat> & threats, BWAPI::Position target) 
 {
 	// calculate the standard flee vector
 	double2 fleeVector = getFleeVector(threats);
@@ -139,7 +155,7 @@ BWAPI::Position ScoutManager::calcFleePosition(const std::vector<GroundThreat> &
 	// normalise the target vector
 	if (target) 
 	{
-		targetVector = target->getPosition() - workerScout->getPosition();
+		targetVector = target - workerScout->getPosition();
 		targetVector.normalise();
 	}
 
@@ -382,11 +398,11 @@ BWAPI::Unit * ScoutManager::getEnemyGeyser()
 	return geyser;
 }
 
-bool ScoutManager::enemyWorkerInRadius()
+bool ScoutManager::enemyInRadius()
 {
 	BOOST_FOREACH(BWAPI::Unit * unit, BWAPI::Broodwar->enemy()->getUnits())
 	{
-		if (unit->getType().isWorker() && (unit->getDistance(workerScout) < 300))
+		if ((unit->getDistance(workerScout) < 300))
 		{
 			return true;
 		}
