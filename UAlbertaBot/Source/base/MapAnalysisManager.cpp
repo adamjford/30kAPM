@@ -343,20 +343,19 @@ void MapAnalysisManager::initClingoProgramSource()
 
 void MapAnalysisManager::runASPSolver()
 {
+    // requires Clingo 3.0.5
     std::string clingo = "bwapi-data\\AI\\clingo.exe ";
     std::string problemPart = "ITUBotWall.txt > ";
-    std::string outputPart = "out.txt";
+    std::string outputFile = writeDir + "out.txt";
 
-    std::string combined = (clingo + writeDir + problemPart + writeDir + outputPart);
-
-    Broodwar->printf(combined.c_str());
+    std::string combined = (clingo + writeDir + problemPart + outputFile);
 
     system(combined.c_str());
 
     std::vector<std::string> lines;
     std::string line;
     unsigned lineCounter = 0;
-    std::ifstream file((writeDir + outputPart).c_str());
+    std::ifstream file(outputFile.c_str());
     if (file.is_open())
     {
         while (getline(file, line))
@@ -424,7 +423,7 @@ void MapAnalysisManager::runASPSolver()
         file.close();
 
         // finally, add choke point width to the output file
-        std::ofstream oFile("D:/SCAI/IT_WORKS/StarCraft/bwapi-data/AI/out.txt", std::ios::app);
+        std::ofstream oFile(outputFile.c_str(), std::ios::app);
 
         if (oFile.is_open())
         {
