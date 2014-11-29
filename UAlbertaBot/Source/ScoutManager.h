@@ -13,18 +13,19 @@ class ScoutManager {
 
 	BWAPI::Unit *	closestEnemyWorker();
 
+	bool				doneScouting;
 	bool			scoutUnderAttack;
 	
 	void smartMove(BWAPI::Unit * attacker, BWAPI::Position targetPosition);
 	void smartAttack(BWAPI::Unit * attacker, BWAPI::Unit * target);
-	bool enemyWorkerInRadius();
+	bool enemyInRadius();
 
-	BWAPI::Position		calcFleePosition(const std::vector<GroundThreat> & threats, BWAPI::Unit * target);
+	BWAPI::Position		calcFleePosition(const std::vector<GroundThreat> & threats, BWAPI::Position target);
 	bool				isValidFleePosition(BWAPI::Position pos);
 	void				fillGroundThreats(std::vector<GroundThreat> & threats, BWAPI::Position target);
 	double2				getFleeVector(const std::vector<GroundThreat> & threats);
 	BWAPI::Unit *		getEnemyGeyser();
-
+	
 
 public:
 
