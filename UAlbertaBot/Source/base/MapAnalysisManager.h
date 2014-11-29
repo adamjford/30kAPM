@@ -11,8 +11,8 @@ class MapAnalysisManager
     BWTA::Region* home;
     BWTA::Chokepoint* choke;
 
-    std::string					readDir;
-    std::string					writeDir;
+    std::string readDir;
+    std::string	writeDir;
 
     void analyzeChoke();
     void initClingoProgramSource();
@@ -25,4 +25,6 @@ public:
         static MapAnalysisManager instance;
         return instance;
     }
+
+    std::vector<std::pair<BWAPI::UnitType, BWAPI::TilePosition> > &getWallInPositions();
 };

@@ -29,7 +29,7 @@ void initClingoProgramSource();
 
 std::vector<std::pair<UnitType, TilePosition> > wallLayout;
 bool wallData = true;
-std::vector<std::pair<BWAPI::UnitType, BWAPI::TilePosition> > _wall;
+std::vector<std::pair<UnitType, TilePosition> > _wall;
 
 MapAnalysisManager::MapAnalysisManager()
 {
@@ -81,6 +81,11 @@ void MapAnalysisManager::init()
     runASPSolver();
 
     Broodwar->printf("Done analyzing map.");
+}
+
+std::vector<std::pair<UnitType, TilePosition>> &MapAnalysisManager::getWallInPositions()
+{
+    return _wall;
 }
 
 Unit* pickBuilder()
