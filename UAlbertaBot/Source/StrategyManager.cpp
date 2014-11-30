@@ -163,7 +163,7 @@ void StrategyManager::writeResults()
 
 void StrategyManager::setStrategy()
 {
-    currentStrategy = TerranMarineRush;
+    currentStrategy = TerranBunkerBuild;
 
     return;
 

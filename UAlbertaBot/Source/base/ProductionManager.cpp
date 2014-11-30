@@ -8,6 +8,7 @@
 #define BOADD(N, T, B) for (int i=0; i<N; ++i) { queue.queueAsLowestPriority(MetaType(T), B); }
 
 #define GOAL_ADD(G, M, N) G.push_back(std::pair<MetaType, int>(M, N))
+#include "MapAnalysisManager.h"
 
 ProductionManager::ProductionManager() 
     : initialBuildSet(false)
