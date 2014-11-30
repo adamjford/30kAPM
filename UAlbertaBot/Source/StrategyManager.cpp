@@ -31,7 +31,7 @@ void StrategyManager::addStrategies()
     //protossOpeningBook[ProtossDarkTemplar]	= "0 0 0 0 1 3 0 7 5 0 0 12 3 13 0 22 22 22 22 0 1 0";
     protossOpeningBook[ProtossDarkTemplar] = "0 0 0 0 1 0 3 0 7 0 5 0 12 0 13 3 22 22 1 22 22 0 1 0";
     protossOpeningBook[ProtossDragoons] = "0 0 0 0 1 0 0 3 0 7 0 0 5 0 0 3 8 6 1 6 6 0 3 1 0 6 6 6";
-    terranOpeningBook[TerranMarineRush] = "0 0 0 0 0 1 0 0 3 0 0 3 0 1 0 5 4";
+    terranOpeningBook[TerranMarineRush] = "0 0 0 0 0 1 0 0 3 0 0 3 0 1 0 5 4 6";
     zergOpeningBook[ZergZerglingRush] = "0 0 0 0 0 1 0 0 0 2 3 5 0 0 0 0 0 0 1 6";
 
     if (selfRace == BWAPI::Races::Protoss)
@@ -312,7 +312,7 @@ const bool StrategyManager::doAttack(const std::set<BWAPI::Unit *>& freeUnits)
 {
     int ourForceSize = (int)freeUnits.size();
 
-    int numUnitsNeededForAttack = 1;
+    int numUnitsNeededForAttack = 6;
 
     bool doAttack = BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Protoss_Dark_Templar) >= 1
         || ourForceSize >= numUnitsNeededForAttack;
@@ -624,8 +624,19 @@ const MetaPairVector StrategyManager::getTerranBuildOrderGoal() const
     int numMarines = BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Marine);
     int numMedics = BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Medic);
 
-    int marinesWanted = numMarines + 12;
-    int medicsWanted = numMedics + 2;
+    int marinesWanted = numMarines + 5;
+    int medicsWanted = numMedics + 1;
+	int ratio = numMarines / 5;
+
+	// have one medic for every 5 marines
+	if (numMedics >= ratio)
+	{
+		medicsWanted = 0;
+	}
+	else 
+	{
+		medicsWanted = numMedics + 1;
+	}
 
     // if our Academy got blown up, rebuild it
     if (BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Academy) < 1)
