@@ -31,7 +31,7 @@ void StrategyManager::addStrategies()
     //protossOpeningBook[ProtossDarkTemplar]	= "0 0 0 0 1 3 0 7 5 0 0 12 3 13 0 22 22 22 22 0 1 0";
     protossOpeningBook[ProtossDarkTemplar] = "0 0 0 0 1 0 3 0 7 0 5 0 12 0 13 3 22 22 1 22 22 0 1 0";
     protossOpeningBook[ProtossDragoons] = "0 0 0 0 1 0 0 3 0 7 0 0 5 0 0 3 8 6 1 6 6 0 3 1 0 6 6 6";
-    terranOpeningBook[TerranMarineRush] = "0 0 0 0 0 1 0 0 3 0 0 3 0 1 0 5 4 6";
+    terranOpeningBook[TerranMarineRush] = "0 0 0 0 0 1 0 0 3 0 0 3 0 1 0 5 4";
     zergOpeningBook[ZergZerglingRush] = "0 0 0 0 0 1 0 0 0 2 3 5 0 0 0 0 0 0 1 6";
 
     if (selfRace == BWAPI::Races::Protoss)
@@ -646,21 +646,23 @@ const MetaPairVector StrategyManager::getTerranBuildOrderGoal() const
     else
     {
         // If U238 Shells are not researched and are not being researched, do it
-        if ((BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::U_238_Shells) < 1))
+        if ((BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::U_238_Shells) == 0))
         {
             goal.push_back(MetaPair(BWAPI::UpgradeTypes::U_238_Shells, 1));
         }
 
         // If stimpacks are not researched and are not being researched, do it
         if (!BWAPI::Broodwar->self()->hasResearched(BWAPI::TechTypes::Stim_Packs) &&
-            !BWAPI::Broodwar->self()->isResearching(BWAPI::TechTypes::Stim_Packs))
+            !BWAPI::Broodwar->self()->isResearching(BWAPI::TechTypes::Stim_Packs) &&
+			BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::U_238_Shells) == 1)
         {
             goal.push_back(MetaPair(BWAPI::TechTypes::Stim_Packs, 1));
         }
 
         // If we've got some medics, grab the energy upgrade
         if ((BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Medic) > 1)
-            && (BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::Caduceus_Reactor) < 1))
+            && (BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::Caduceus_Reactor) == 0)
+			&& BWAPI::Broodwar->self()->hasResearched(BWAPI::TechTypes::Stim_Packs))
         {
             goal.push_back(MetaPair(BWAPI::UpgradeTypes::Caduceus_Reactor, 1));
         }
