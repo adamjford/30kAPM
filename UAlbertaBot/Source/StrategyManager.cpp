@@ -163,10 +163,13 @@ void StrategyManager::writeResults()
 
 void StrategyManager::setStrategy()
 {
+    //currentStrategy = TerranMarineRush;
     currentStrategy = TerranBunkerBuild;
 
-    return;
+    // Will need to turn code below back on eventually
+    // For now, switch to the strategy you're testing above manually
 
+    /*
     // if we are using file io to determine strategy, do so
     if (Options::Modules::USING_STRATEGY_IO)
     {
@@ -202,9 +205,8 @@ void StrategyManager::setStrategy()
     else
     {
         // otherwise return a random strategy
-        // Hardcoding strategy currently being implemented for now
-        currentStrategy = TerranBunkerBuild;
     }
+    */
 }
 
 void StrategyManager::onEnd(const bool isWinner)
