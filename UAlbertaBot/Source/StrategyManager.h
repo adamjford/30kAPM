@@ -17,71 +17,69 @@ typedef std::vector<MetaPair> MetaPairVector;
 
 class StrategyManager 
 {
-    StrategyManager();
-    ~StrategyManager() {}
+	StrategyManager();
+	~StrategyManager() {}
 
-    std::vector<std::string>	protossOpeningBook;
-    std::vector<std::string>	terranOpeningBook;
-    std::vector<std::string>	zergOpeningBook;
+	std::vector<std::string>	protossOpeningBook;
+	std::vector<std::string>	terranOpeningBook;
+	std::vector<std::string>	zergOpeningBook;
 
-    std::string					readDir;
-    std::string					writeDir;
-    std::vector<IntPair>		results;
-    std::vector<int>			usableStrategies;
-    int							currentStrategy;
+	std::string					readDir;
+	std::string					writeDir;
+	std::vector<IntPair>		results;
+	std::vector<int>			usableStrategies;
+	int							currentStrategy;
 
-    BWAPI::Race					selfRace;
-    BWAPI::Race					enemyRace;
+	BWAPI::Race					selfRace;
+	BWAPI::Race					enemyRace;
 
-    bool						firstAttackSent;
+	bool						firstAttackSent;
 
-    void	addStrategies();
-    void	setStrategy();
-    void	readResults();
-    void	writeResults();
+	void	addStrategies();
+	void	setStrategy();
+	void	readResults();
+	void	writeResults();
 
-    const	int					getScore(BWAPI::Player * player) const;
-    const	double				getUCBValue(const size_t & strategy) const;
-    
-    // protoss strategy
-    const	bool				expandProtossZealotRush() const;
-    const	std::string			getProtossZealotRushOpeningBook() const;
-    const	MetaPairVector		getProtossZealotRushBuildOrderGoal() const;
+	const	int					getScore(BWAPI::Player * player) const;
+	const	double				getUCBValue(const size_t & strategy) const;
+	
+	// protoss strategy
+	const	bool				expandProtossZealotRush() const;
+	const	std::string			getProtossZealotRushOpeningBook() const;
+	const	MetaPairVector		getProtossZealotRushBuildOrderGoal() const;
 
-    const	bool				expandProtossDarkTemplar() const;
-    const	std::string			getProtossDarkTemplarOpeningBook() const;
-    const	MetaPairVector		getProtossDarkTemplarBuildOrderGoal() const;
+	const	bool				expandProtossDarkTemplar() const;
+	const	std::string			getProtossDarkTemplarOpeningBook() const;
+	const	MetaPairVector		getProtossDarkTemplarBuildOrderGoal() const;
 
-    const	bool				expandProtossDragoons() const;
-    const	std::string			getProtossDragoonsOpeningBook() const;
-    const	MetaPairVector		getProtossDragoonsBuildOrderGoal() const;
+	const	bool				expandProtossDragoons() const;
+	const	std::string			getProtossDragoonsOpeningBook() const;
+	const	MetaPairVector		getProtossDragoonsBuildOrderGoal() const;
 
-    const	MetaPairVector		getTerranMarineRushBuildOrderGoal() const;
-    void addTerranDetectorToGoal(std::vector<std::pair<MetaType, unsigned char>>& goal) const;
-    const	MetaPairVector		getTerranBunkerBuildOrderGoal() const;
-    const	MetaPairVector		getZergBuildOrderGoal() const;
+	const	MetaPairVector		getTerranBuildOrderGoal() const;
+	const	MetaPairVector		getZergBuildOrderGoal() const;
 
-    const	MetaPairVector		getProtossOpeningBook() const;
-    const	MetaPairVector		getTerranOpeningBook() const;
-    const	MetaPairVector		getZergOpeningBook() const;
+	const	MetaPairVector		getProtossOpeningBook() const;
+	const	MetaPairVector		getTerranOpeningBook() const;
+	const	MetaPairVector		getZergOpeningBook() const;
 
 public:
 
-    enum { ProtossZealotRush=0, ProtossDarkTemplar=1, ProtossDragoons=2, NumProtossStrategies=3 };
-    enum { TerranMarineRush=0, TerranBunkerBuild=1, NumTerranStrategies=2 };
-    enum { ZergZerglingRush=0, NumZergStrategies=1 };
+	enum { ProtossZealotRush=0, ProtossDarkTemplar=1, ProtossDragoons=2, NumProtossStrategies=3 };
+	enum { TerranMarineRush=0, NumTerranStrategies=1 };
+	enum { ZergZerglingRush=0, NumZergStrategies=1 };
 
-    static	StrategyManager &	Instance();
+	static	StrategyManager &	Instance();
 
-            void				onEnd(const bool isWinner);
-    
-    const	bool				regroup(int numInRadius);
-    const	bool				doAttack(const std::set<BWAPI::Unit *> & freeUnits);
-    const	int				    defendWithWorkers();
-    const	bool				rushDetected();
+			void				onEnd(const bool isWinner);
+	
+	const	bool				regroup(int numInRadius);
+	const	bool				doAttack(const std::set<BWAPI::Unit *> & freeUnits);
+	const	int				    defendWithWorkers();
+	const	bool				rushDetected();
 
-    const	int					getCurrentStrategy();
+	const	int					getCurrentStrategy();
 
-    const	MetaPairVector		getBuildOrderGoal();
-    const	std::string			getOpeningBook() const;
+	const	MetaPairVector		getBuildOrderGoal();
+	const	std::string			getOpeningBook() const;
 };
