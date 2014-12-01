@@ -97,6 +97,7 @@ class StarcraftData {
 			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Factory, actions.size()));
 			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Starport, actions.size()));
 			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Wraith, actions.size()));
+			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Bunker, actions.size()));
 		}
 		else if (r == BWAPI::Races::Zerg)
 		{
