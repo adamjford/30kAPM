@@ -105,6 +105,7 @@ class StarcraftData {
 			actions.push_back(StarcraftAction(BWAPI::UpgradeTypes::Caduceus_Reactor, actions.size()));
 			actions.push_back(StarcraftAction(BWAPI::UpgradeTypes::Terran_Infantry_Armor, actions.size()));
 			actions.push_back(StarcraftAction(BWAPI::UpgradeTypes::Terran_Infantry_Weapons, actions.size()));
+			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Bunker, actions.size()));
 		}
 		else if (r == BWAPI::Races::Zerg)
 		{
