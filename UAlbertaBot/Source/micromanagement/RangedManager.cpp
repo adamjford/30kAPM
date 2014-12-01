@@ -67,9 +67,7 @@ void RangedManager::kiteTarget(BWAPI::Unit * rangedUnit, BWAPI::Unit * target)
 
 	// see if we can use stim pack
 	BWAPI::UnitType targetType = target->getType();
-	if (((targetType == BWAPI::UnitTypes::Protoss_Zealot) || (targetType == BWAPI::UnitTypes::Zerg_Zergling)
-		|| (targetType == BWAPI::UnitTypes::Zerg_Mutalisk))
-		&& (target->isInWeaponRange(rangedUnit)))
+	if ((target->isInWeaponRange(rangedUnit)))
 	{
 		useStimpack(rangedUnit);
 	}

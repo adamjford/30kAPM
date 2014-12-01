@@ -31,7 +31,7 @@ void StrategyManager::addStrategies()
     //protossOpeningBook[ProtossDarkTemplar]	= "0 0 0 0 1 3 0 7 5 0 0 12 3 13 0 22 22 22 22 0 1 0";
     protossOpeningBook[ProtossDarkTemplar] = "0 0 0 0 1 0 3 0 7 0 5 0 12 0 13 3 22 22 1 22 22 0 1 0";
     protossOpeningBook[ProtossDragoons] = "0 0 0 0 1 0 0 3 0 7 0 0 5 0 0 3 8 6 1 6 6 0 3 1 0 6 6 6";
-    terranOpeningBook[TerranMarineRush] = "0 0 0 0 0 1 0 0 3 0 0 3 0 1 0 5 4";
+    terranOpeningBook[TerranMarineRush] = "0 0 0 0 0 1 0 0 3 0 0 3 0 1 0 5 4 6 0 0 5 5 5 7";
     zergOpeningBook[ZergZerglingRush] = "0 0 0 0 0 1 0 0 0 2 3 5 0 0 0 0 0 0 1 6";
 
     if (selfRace == BWAPI::Races::Protoss)
@@ -624,8 +624,8 @@ const MetaPairVector StrategyManager::getTerranBuildOrderGoal() const
     int numMarines = BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Marine);
     int numMedics = BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Medic);
 
-    int marinesWanted = numMarines + 5;
-    int medicsWanted = numMedics + 1;
+    int marinesWanted = numMarines + 10;
+    int medicsWanted = numMedics + 2;
 	int ratio = numMarines / 5;
 
 	// have one medic for every 5 marines
@@ -635,7 +635,7 @@ const MetaPairVector StrategyManager::getTerranBuildOrderGoal() const
 	}
 	else 
 	{
-		medicsWanted = numMedics + 1;
+		medicsWanted = numMedics + 2;
 	}
 
     // if our Academy got blown up, rebuild it
@@ -646,15 +646,14 @@ const MetaPairVector StrategyManager::getTerranBuildOrderGoal() const
     else
     {
         // If U238 Shells are not researched and are not being researched, do it
-        if ((BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::U_238_Shells) == 0))
+        if (BWAPI::Broodwar->self()->hasResearched(BWAPI::TechTypes::Stim_Packs))
         {
-            goal.push_back(MetaPair(BWAPI::UpgradeTypes::U_238_Shells, 1));
+			goal.push_back(MetaPair(BWAPI::UpgradeTypes::U_238_Shells, 1));
         }
 
         // If stimpacks are not researched and are not being researched, do it
         if (!BWAPI::Broodwar->self()->hasResearched(BWAPI::TechTypes::Stim_Packs) &&
-            !BWAPI::Broodwar->self()->isResearching(BWAPI::TechTypes::Stim_Packs) &&
-			BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::U_238_Shells) == 1)
+            !BWAPI::Broodwar->self()->isResearching(BWAPI::TechTypes::Stim_Packs))
         {
             goal.push_back(MetaPair(BWAPI::TechTypes::Stim_Packs, 1));
         }
@@ -662,12 +661,54 @@ const MetaPairVector StrategyManager::getTerranBuildOrderGoal() const
         // If we've got some medics, grab the energy upgrade
         if ((BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Medic) > 1)
             && (BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::Caduceus_Reactor) == 0)
-			&& BWAPI::Broodwar->self()->hasResearched(BWAPI::TechTypes::Stim_Packs))
+			&& BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::U_238_Shells) == 1)
         {
-            goal.push_back(MetaPair(BWAPI::UpgradeTypes::Caduceus_Reactor, 1));
+			goal.push_back(MetaPair(BWAPI::UpgradeTypes::Caduceus_Reactor, 1));
         }
     }
 
+/*	// build a factory if we have 20 marines
+	if (numMarines > 20)
+	{
+		goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Factory, 1));
+	}
+
+	// build a armory if we have 25 marines
+	if (numMarines > 25)
+	{
+		goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Starport, 1));
+	}
+
+	if (BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Starport) == 1
+		&& BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Science_Vessel) < 1) 
+	{
+		goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Science_Facility, 1));
+	}
+	// Build Engineering Bay
+	if (BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Engineering_Bay) < 1 &&
+		BWAPI::Broodwar->getFrameCount() > 9000)
+	{
+		goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Engineering_Bay, 1));
+	}
+	else 
+	{
+		if ((BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::Terran_Infantry_Weapons) < 1 )&&
+			(!BWAPI::Broodwar->self()->isUpgrading(BWAPI::UpgradeTypes::Terran_Infantry_Weapons)) &&
+			BWAPI::Broodwar->self()->hasResearched(BWAPI::TechTypes::Stim_Packs))
+		{
+			marinesWanted = numMarines + 10;
+			goal.push_back(MetaPair(BWAPI::UpgradeTypes::Terran_Infantry_Weapons, 1));
+		}
+		else
+		{
+			if ((BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::Terran_Infantry_Weapons) <= 3)
+				&& BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Science_Vessel) == 1)
+			{
+				goal.push_back(MetaPair(BWAPI::UpgradeTypes::Terran_Infantry_Weapons, 1));
+			}
+		}
+	}
+*/
     goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Marine, marinesWanted));
     goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Medic, medicsWanted));
 
