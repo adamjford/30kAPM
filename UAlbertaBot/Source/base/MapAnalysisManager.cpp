@@ -5,6 +5,7 @@
 #include <cassert>
 #include <fstream>
 #include <sstream>
+#include <StrategyManager.h>
 
 using namespace BWAPI;
 using std::endl;
@@ -69,18 +70,19 @@ void MapAnalysisManager::init()
     BWTA::readMap();
     BWTA::analyze();
 
-    if (BWTA::getStartLocation(Broodwar->self()) != NULL)
-    {
-        home = BWTA::getStartLocation(Broodwar->self())->getRegion();
+    if (StrategyManager::Instance().getCurrentStrategy() == StrategyManager::TerranBunkerBuild) {
+
+        if (BWTA::getStartLocation(Broodwar->self()) != NULL)
+        {
+            home = BWTA::getStartLocation(Broodwar->self())->getRegion();
+        }
+
+        findChokeWithSmallestGap();
+
+        analyzeChoke();
+        initClingoProgramSource();
+        runASPSolver();
     }
-
-    findChokeWithSmallestGap();
-
-    analyzeChoke();
-    initClingoProgramSource();
-    runASPSolver();
-
-    Broodwar->printf("Done analyzing map.");
 }
 
 std::vector<std::pair<UnitType, TilePosition>> &MapAnalysisManager::getWallInPositions()

@@ -50,7 +50,6 @@ class StrategyManager
 
     const	bool				expandProtossDarkTemplar() const;
     const	std::string			getProtossDarkTemplarOpeningBook() const;
-    const	MetaPairVector		getProtossDarkTemplarBuildOrderGoal() const;
 
     const	bool				expandProtossDragoons() const;
     const	std::string			getProtossDragoonsOpeningBook() const;

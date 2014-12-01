@@ -88,18 +88,19 @@ void ProductionManager::update()
         queue.queueAsHighestPriority(MetaType(BWAPI::Broodwar->self()->getRace().getSupplyProvider()), true);
     }
 
+
     // if they have cloaked units get a new goal asap
     if (!enemyCloakedDetected && InformationManager::Instance().enemyHasCloakedUnits())
     {
-        if (BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Protoss_Photon_Cannon) < 2)
+		if (BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Missile_Turret) < 2)
         {
-            queue.queueAsHighestPriority(MetaType(BWAPI::UnitTypes::Protoss_Photon_Cannon), true);
-            queue.queueAsHighestPriority(MetaType(BWAPI::UnitTypes::Protoss_Photon_Cannon), true);
+            queue.queueAsHighestPriority(MetaType(BWAPI::UnitTypes::Terran_Missile_Turret), true);
+            queue.queueAsHighestPriority(MetaType(BWAPI::UnitTypes::Terran_Missile_Turret), true);
         }
 
-        if (BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Protoss_Forge) == 0)
+        if (BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Engineering_Bay) == 0)
         {
-            queue.queueAsHighestPriority(MetaType(BWAPI::UnitTypes::Protoss_Forge), true);
+            queue.queueAsHighestPriority(MetaType(BWAPI::UnitTypes::Terran_Engineering_Bay), true);
         }
 
         BWAPI::Broodwar->printf("Enemy Cloaked Unit Detected!");
@@ -156,6 +157,13 @@ void ProductionManager::manageBuildOrderQueue()
 
         // if we try to build too many refineries manually remove it
         if (currentItem.metaType.isRefinery() && (BWAPI::Broodwar->self()->allUnitCount(BWAPI::Broodwar->self()->getRace().getRefinery() >= 3)))
+        {
+            queue.removeCurrentHighestPriorityItem();
+            break;
+        }
+
+		// only need one Academy
+        if (currentItem.metaType.isBuilding() && (BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Academy > 1)))
         {
             queue.removeCurrentHighestPriorityItem();
             break;

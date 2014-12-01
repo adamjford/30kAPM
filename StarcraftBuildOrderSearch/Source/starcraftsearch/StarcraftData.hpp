@@ -96,7 +96,15 @@ class StarcraftData {
 			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Medic, actions.size()));
 			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Factory, actions.size()));
 			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Starport, actions.size()));
+			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Science_Facility, actions.size()));
+			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Engineering_Bay, actions.size()));
+			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Missile_Turret, actions.size()));
 			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Wraith, actions.size()));
+			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Armory, actions.size()));
+			actions.push_back(StarcraftAction(BWAPI::UpgradeTypes::U_238_Shells, actions.size()));
+			actions.push_back(StarcraftAction(BWAPI::UpgradeTypes::Caduceus_Reactor, actions.size()));
+			actions.push_back(StarcraftAction(BWAPI::UpgradeTypes::Terran_Infantry_Armor, actions.size()));
+			actions.push_back(StarcraftAction(BWAPI::UpgradeTypes::Terran_Infantry_Weapons, actions.size()));
 			actions.push_back(StarcraftAction(BWAPI::UnitTypes::Terran_Bunker, actions.size()));
 		}
 		else if (r == BWAPI::Races::Zerg)
