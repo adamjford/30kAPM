@@ -3,7 +3,6 @@
 
 class MapAnalysisManager
 {
-    MapAnalysisManager();
     void findChokeWithSmallestGap();
 
     ~MapAnalysisManager() { };

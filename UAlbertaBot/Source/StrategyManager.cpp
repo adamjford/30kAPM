@@ -564,7 +564,7 @@ const MetaPairVector StrategyManager::getTerranMarineRushBuildOrderGoal() const
     int medicsWanted = numMedics + 2;
     int ratio = numMarines / 5;
 
-	bool found_academy = false;
+    bool found_academy = false;
 
     // have one medic for every 5 marines
     if (numMedics >= ratio)
@@ -587,18 +587,18 @@ const MetaPairVector StrategyManager::getTerranMarineRushBuildOrderGoal() const
     // if our Academy got blown up, rebuild it
     if (BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Academy) < 1)
     {
-		BOOST_FOREACH(BWAPI::Unit * it, BWAPI::Broodwar->self()->getUnits()){
-			if (it->getBuildType() == BWAPI::UnitTypes::Terran_Academy)
-				found_academy = true;
-		}
-		if (!found_academy)
-			goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Academy, 1));
+        BOOST_FOREACH(BWAPI::Unit * it, BWAPI::Broodwar->self()->getUnits()){
+            if (it->getBuildType() == BWAPI::UnitTypes::Terran_Academy)
+                found_academy = true;
+        }
+        if (!found_academy)
+            goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Academy, 1));
     }
     else
     {
         // If U238 Shells are not researched and are not being researched, do it
         if (BWAPI::Broodwar->self()->hasResearched(BWAPI::TechTypes::Stim_Packs)
-			&& (BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::U_238_Shells) == 0))
+            && (BWAPI::Broodwar->self()->getUpgradeLevel(BWAPI::UpgradeTypes::U_238_Shells) == 0))
         {
             goal.push_back(MetaPair(BWAPI::UpgradeTypes::U_238_Shells, 1));
         }

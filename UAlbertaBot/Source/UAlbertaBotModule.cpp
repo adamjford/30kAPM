@@ -38,6 +38,8 @@ void UAlbertaBotModule::onStart()
     
     if (Options::Modules::USING_GAMECOMMANDER)
     {
+        BWTA::readMap();
+        BWTA::analyze();
         MapAnalysisManager::Instance().init();
     }
     
