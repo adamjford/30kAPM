@@ -32,10 +32,6 @@ std::vector<std::pair<UnitType, TilePosition> > wallLayout;
 bool wallData = true;
 std::vector<std::pair<UnitType, TilePosition> > _wall;
 
-MapAnalysisManager::MapAnalysisManager()
-{
-}
-
 void MapAnalysisManager::findChokeWithSmallestGap()
 {
     std::set<BWTA::Chokepoint*> chokepoints = home->getChokepoints();
