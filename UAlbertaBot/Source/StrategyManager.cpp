@@ -28,8 +28,8 @@ void StrategyManager::addStrategies()
     protossOpeningBook[ProtossZealotRush]	= "0 0 0 0 1 0 3 3 0 0 4 1 4 4 0 4 4 0 1 4 3 0 1 0 4 0 4 4 4 4 1 0 4 4 4";
     protossOpeningBook[ProtossDarkTemplar]	= "0 0 0 0 1 0 3 0 7 0 5 0 12 0 13 3 22 22 1 22 22 0 1 0";
     protossOpeningBook[ProtossDragoons]		= "0 0 0 0 1 0 0 3 0 7 0 0 5 0 0 3 8 6 1 6 6 0 3 1 0 6 6 6";
-    terranOpeningBook[TerranMarineRush]		= "0 0 0 0 0 1 0 0 3 0 0 3 0 1 0 4 0 0 0 6";
-    terranOpeningBook[TerranBunkerBuild]	= "0 0 0 0 0 1 0 0 3 0 0 1 0 3 0 4 0 0 0 6";
+    terranOpeningBook[TerranMarineRush]		= "0 0 0 0 0 1 0 0 3 0 0 3 0 1 0 4 0 0 0";
+    terranOpeningBook[TerranBunkerBuild]	= "0 0 0 0 0 1 0 0 3 0 0 1 0 3 0 4 0 0 0";
     zergOpeningBook[ZergZerglingRush]		= "0 0 0 0 0 1 0 0 0 2 3 5 0 0 0 0 0 0 1 6";
 
     if (selfRace == BWAPI::Races::Protoss)
@@ -679,8 +679,8 @@ const MetaPairVector StrategyManager::getTerranBunkerBuildOrderGoal() const
     int numMarines =			BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Marine);
     int numWraith =				BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Wraith);
 
-    int marinesWanted = numMarines + 6;
-    int wraithsWanted = numWraith + 8;
+    int marinesWanted = 6;
+    int wraithsWanted =  8;
 
     if (InformationManager::Instance().enemyHasCloakedUnits())
     {
