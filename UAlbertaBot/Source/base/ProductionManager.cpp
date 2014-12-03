@@ -162,7 +162,7 @@ void ProductionManager::manageBuildOrderQueue()
         }
 
 		// only need one Academy
-        if (currentItem.metaType.isBuilding() && (BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Academy > 1)))
+        if (currentItem.metaType.isBuilding() && (BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Academy > 0)))
         {
             queue.removeCurrentHighestPriorityItem();
             break;

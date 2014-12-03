@@ -34,7 +34,6 @@ std::vector<MetaType> StarcraftBuildOrderSearchManager::findBuildOrder(std::vect
 			--pair.second;
 		}
 	}
-	BWAPI::Broodwar->printf("%d", metaVector.size());
 	return metaVector;
 }
 
