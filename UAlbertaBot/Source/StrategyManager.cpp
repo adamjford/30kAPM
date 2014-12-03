@@ -163,8 +163,8 @@ void StrategyManager::writeResults()
 
 void StrategyManager::setStrategy()
 {
-    //currentStrategy = TerranMarineRush;
-    currentStrategy = TerranBunkerBuild;
+    currentStrategy = TerranMarineRush;
+    //currentStrategy = TerranBunkerBuild;
 
     // Will need to turn code below back on eventually
     // For now, switch to the strategy you're testing above manually
@@ -562,6 +562,8 @@ const MetaPairVector StrategyManager::getTerranMarineRushBuildOrderGoal() const
     int medicsWanted = numMedics + 2;
     int ratio = numMarines / 5;
 
+	bool found_academy = false;
+
     // have one medic for every 5 marines
     if (numMedics >= ratio)
     {
@@ -575,7 +577,12 @@ const MetaPairVector StrategyManager::getTerranMarineRushBuildOrderGoal() const
     // if our Academy got blown up, rebuild it
     if (BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Academy) < 1)
     {
-        goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Academy, 1));
+		BOOST_FOREACH(BWAPI::Unit * it, BWAPI::Broodwar->self()->getUnits()){
+			if (it->getBuildType() == BWAPI::UnitTypes::Terran_Academy)
+				found_academy = true;
+		}
+		if (!found_academy)
+			goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Academy, 1));
     }
     else
     {
