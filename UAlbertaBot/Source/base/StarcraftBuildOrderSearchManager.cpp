@@ -23,9 +23,19 @@ void StarcraftBuildOrderSearchManager::update(double timeLimit)
 }
 
 // function which is called from the bot
-std::vector<MetaType> StarcraftBuildOrderSearchManager::findBuildOrder(const std::vector< std::pair<MetaType, UnitCountType> > & goalUnits)
+std::vector<MetaType> StarcraftBuildOrderSearchManager::findBuildOrder(std::vector< std::pair<MetaType, UnitCountType> > goalUnits)
 {
-	return getMetaVector(search(goalUnits));
+	std::vector<MetaType> metaVector;
+	
+	for (size_t i(0); i < goalUnits.size(); ++i) {
+		std::pair<MetaType, UnitCountType> pair = goalUnits[i];
+		while (pair.second > 0u) {
+			metaVector.push_back(pair.first);
+			--pair.second;
+		}
+	}
+	BWAPI::Broodwar->printf("%d", metaVector.size());
+	return metaVector;
 }
 
 // function which does all the searching

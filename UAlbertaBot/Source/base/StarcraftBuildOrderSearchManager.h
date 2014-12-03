@@ -60,5 +60,5 @@ public:
 
 	std::vector<MetaType>		getOpeningBuildOrder();
 	
-	std::vector<MetaType>		findBuildOrder(const std::vector< std::pair<MetaType, UnitCountType> > & goalUnits);
+	std::vector<MetaType>		findBuildOrder(std::vector< std::pair<MetaType, UnitCountType> > goalUnits);
 };

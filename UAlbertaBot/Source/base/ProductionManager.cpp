@@ -43,7 +43,6 @@ void ProductionManager::setBuildOrder(const std::vector<MetaType> & buildOrder)
 void ProductionManager::performBuildOrderSearch(const std::vector< std::pair<MetaType, UnitCountType> > & goal)
 {	
     std::vector<MetaType> buildOrder = StarcraftBuildOrderSearchManager::Instance().findBuildOrder(goal);
-
     // set the build order
     setBuildOrder(buildOrder);
 }
