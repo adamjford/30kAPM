@@ -32,21 +32,6 @@ std::vector<std::pair<UnitType, TilePosition> > wallLayout;
 bool wallData = true;
 std::vector<std::pair<UnitType, TilePosition> > _wall;
 
-MapAnalysisManager::MapAnalysisManager()
-{
-    // read in the name of the read and write directories from settings file
-    struct stat buf;
-
-    // if the file doesn't exist something is wrong so just set them to default settings
-    if (stat(Options::FileIO::FILE_SETTINGS, &buf) != -1)
-    {
-        std::ifstream f_in(Options::FileIO::FILE_SETTINGS);
-        getline(f_in, readDir);
-        getline(f_in, writeDir);
-        f_in.close();
-    }
-}
-
 void MapAnalysisManager::findChokeWithSmallestGap()
 {
     std::set<BWTA::Chokepoint*> chokepoints = home->getChokepoints();
@@ -67,8 +52,17 @@ void MapAnalysisManager::findChokeWithSmallestGap()
 
 void MapAnalysisManager::init()
 {
-    BWTA::readMap();
-    BWTA::analyze();
+    // read in the name of the read and write directories from settings file
+    struct stat buf;
+
+    // if the file doesn't exist something is wrong so just set them to default settings
+    if (stat(Options::FileIO::FILE_SETTINGS, &buf) != -1)
+    {
+        std::ifstream f_in(Options::FileIO::FILE_SETTINGS);
+        getline(f_in, readDir);
+        getline(f_in, writeDir);
+        f_in.close();
+    }
 
     if (StrategyManager::Instance().getCurrentStrategy() == StrategyManager::TerranBunkerBuild) {
 
