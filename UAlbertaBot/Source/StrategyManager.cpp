@@ -28,7 +28,7 @@ void StrategyManager::addStrategies()
     protossOpeningBook[ProtossZealotRush]	= "0 0 0 0 1 0 3 3 0 0 4 1 4 4 0 4 4 0 1 4 3 0 1 0 4 0 4 4 4 4 1 0 4 4 4";
     protossOpeningBook[ProtossDarkTemplar]	= "0 0 0 0 1 0 3 0 7 0 5 0 12 0 13 3 22 22 1 22 22 0 1 0";
     protossOpeningBook[ProtossDragoons]		= "0 0 0 0 1 0 0 3 0 7 0 0 5 0 0 3 8 6 1 6 6 0 3 1 0 6 6 6";
-    terranOpeningBook[TerranMarineRush]		= "0 0 0 0 0 1 0 0 3 0 0 3 0 1 0 4 0 0 0";
+    terranOpeningBook[TerranMarineRush]		= "0 0 0 0 0 1 0 0 3 0 0 3 0 1 0 0 0 0";
     terranOpeningBook[TerranBunkerBuild]	= "0 0 0 0 0 1 0 0 3 0 0 1 0 3 0 4 0 0 0";
     zergOpeningBook[ZergZerglingRush]		= "0 0 0 0 0 1 0 0 0 2 3 5 0 0 0 0 0 0 1 6";
 
@@ -557,7 +557,9 @@ const MetaPairVector StrategyManager::getTerranMarineRushBuildOrderGoal() const
 
     int numMarines = BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Marine);
     int numMedics = BWAPI::Broodwar->self()->allUnitCount(BWAPI::UnitTypes::Terran_Medic);
+	int numMinerals = BWAPI::Broodwar->self()->minerals();
 
+	int barracksWanted = numMinerals / 300;
     int marinesWanted = 10;
     int medicsWanted = numMedics + 2;
     int ratio = numMarines / 5;
@@ -573,6 +575,14 @@ const MetaPairVector StrategyManager::getTerranMarineRushBuildOrderGoal() const
     {
         medicsWanted = 2;
     }
+
+	if (barracksWanted > 0) 
+	{
+		if (BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Refinery) < 1) 
+		{
+			goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Refinery, 1));
+		}
+	}
 
     // if our Academy got blown up, rebuild it
     if (BWAPI::Broodwar->self()->completedUnitCount(BWAPI::UnitTypes::Terran_Academy) < 1)
@@ -651,6 +661,8 @@ const MetaPairVector StrategyManager::getTerranMarineRushBuildOrderGoal() const
         }
     }
 */
+	goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Barracks, barracksWanted));
+	BWAPI::Broodwar->printf("barracksWanted: %d", barracksWanted);
     goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Marine, marinesWanted));
     goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Medic, medicsWanted));
 
