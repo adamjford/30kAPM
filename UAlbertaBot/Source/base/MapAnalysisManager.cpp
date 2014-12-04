@@ -345,17 +345,27 @@ void MapAnalysisManager::initClingoProgramSource()
 void MapAnalysisManager::runASPSolver()
 {
     // requires Clingo 3.0.5
+	
     std::string clingo = "bwapi-data\\AI\\clingo.exe ";
     std::string problemPart = "ITUBotWall.txt > ";
-    std::string outputFile = writeDir + "out.txt";
+	std::string outputFile = writeDir + BWAPI::Broodwar->mapName() + "out.txt";
 
     std::string combined = (clingo + writeDir + problemPart + outputFile);
+	struct stat buf;
 
-    system(combined.c_str());
+	//if this is the first time on the map, don't read from the file, just write to it
+	if (stat(outputFile.c_str(), &buf) == -1)
+	{
+		system(combined.c_str());
+		return;
+	}
+    
 
     std::vector<std::string> lines;
     std::string line;
     unsigned lineCounter = 0;
+	
+	
     std::ifstream file(outputFile.c_str());
     if (file.is_open())
     {

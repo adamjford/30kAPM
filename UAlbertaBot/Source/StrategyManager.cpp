@@ -163,9 +163,26 @@ void StrategyManager::writeResults()
 
 void StrategyManager::setStrategy()
 {
-    currentStrategy = TerranMarineRush;
-    //currentStrategy = TerranBunkerBuild;
+	std::string readDir, writeDir;
+	struct stat buf;
 
+	std::ifstream f_in(Options::FileIO::FILE_SETTINGS);
+	getline(f_in, readDir);
+	getline(f_in, writeDir);
+	f_in.close();
+    
+	std::string outputFile = writeDir + BWAPI::Broodwar->mapName() + "out.txt";
+	
+	//if outputFile doesn't exist, this is the first time on this map
+	if (stat(outputFile.c_str(), &buf) == -1)
+	{
+		BWAPI::Broodwar->printf("Map not played yet, using Marine Rush strategy");
+		currentStrategy = TerranMarineRush;
+		return;
+	}
+	BWAPI::Broodwar->printf("Choosing strategy based on UCB");
+	//currentStrategy = TerranMarineRush;
+	//currentStrategy = TerranBunkerBuild;
     // Will need to turn code below back on eventually
     // For now, switch to the strategy you're testing above manually
 
@@ -662,7 +679,6 @@ const MetaPairVector StrategyManager::getTerranMarineRushBuildOrderGoal() const
     }
 */
 	goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Barracks, barracksWanted));
-	BWAPI::Broodwar->printf("barracksWanted: %d", barracksWanted);
     goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Marine, marinesWanted));
     goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Medic, medicsWanted));
 
@@ -699,9 +715,9 @@ const MetaPairVector StrategyManager::getTerranBunkerBuildOrderGoal() const
         addTerranDetectorToGoal(goal);
     }
 
+
     goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Marine,	marinesWanted));
     goal.push_back(std::pair<MetaType, int>(BWAPI::UnitTypes::Terran_Wraith,	wraithsWanted));
-
     return goal;
 }
 
