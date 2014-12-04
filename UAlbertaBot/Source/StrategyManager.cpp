@@ -171,7 +171,7 @@ void StrategyManager::setStrategy()
 	getline(f_in, writeDir);
 	f_in.close();
     
-	std::string outputFile = writeDir + BWAPI::Broodwar->mapName() + "out.txt";
+	std::string outputFile = readDir + BWAPI::Broodwar->mapName() + "out.txt";
 	
 	//if outputFile doesn't exist, this is the first time on this map
 	if (stat(outputFile.c_str(), &buf) == -1)
@@ -180,13 +180,9 @@ void StrategyManager::setStrategy()
 		currentStrategy = TerranMarineRush;
 		return;
 	}
-	BWAPI::Broodwar->printf("Choosing strategy based on UCB");
-	//currentStrategy = TerranMarineRush;
-	//currentStrategy = TerranBunkerBuild;
-    // Will need to turn code below back on eventually
-    // For now, switch to the strategy you're testing above manually
 
-    /*
+	BWAPI::Broodwar->printf("Choosing strategy based on UCB");
+
     // if we are using file io to determine strategy, do so
     if (Options::Modules::USING_STRATEGY_IO)
     {
@@ -221,9 +217,9 @@ void StrategyManager::setStrategy()
     }
     else
     {
-        // otherwise return a random strategy
+        // We always try Marine Rush first, so try Bunker Build next
+        currentStrategy = TerranBunkerBuild;
     }
-    */
 }
 
 void StrategyManager::onEnd(const bool isWinner)

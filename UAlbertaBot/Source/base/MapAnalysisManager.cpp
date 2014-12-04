@@ -50,32 +50,47 @@ void MapAnalysisManager::findChokeWithSmallestGap()
     }
 }
 
+std::string MapAnalysisManager::getFileNameForChokepoint() 
+{
+    Position center = choke->getCenter();
+    std::string separator = "-";
+    std::string x = center.x;
+    std::string y = center.y;
+    return Broodwar->mapName() + separator + x + separator + y;
+}
+
 void MapAnalysisManager::init()
 {
     // read in the name of the read and write directories from settings file
     struct stat buf;
 
-    // if the file doesn't exist something is wrong so just set them to default settings
     if (stat(Options::FileIO::FILE_SETTINGS, &buf) != -1)
     {
+        findChokeWithSmallestGap();
+
         std::ifstream f_in(Options::FileIO::FILE_SETTINGS);
         getline(f_in, readDir);
         getline(f_in, writeDir);
         f_in.close();
-    }
 
-    if (StrategyManager::Instance().getCurrentStrategy() == StrategyManager::TerranBunkerBuild) {
-
-        if (BWTA::getStartLocation(Broodwar->self()) != NULL)
+        std::string outputFile = readDir + getFileNameForChokepoint();
+        
+        //if outputFile doesn't exist, this is the first time on this chokepoint
+        if (stat(outputFile.c_str(), &buf) == -1)
         {
-            home = BWTA::getStartLocation(Broodwar->self())->getRegion();
+            if (BWTA::getStartLocation(Broodwar->self()) != NULL)
+            {
+                home = BWTA::getStartLocation(Broodwar->self())->getRegion();
+            }
+
+            analyzeChoke();
+            initClingoProgramSource();
+            runASPSolver();
         }
-
-        findChokeWithSmallestGap();
-
-        analyzeChoke();
-        initClingoProgramSource();
-        runASPSolver();
+        else if (StrategyManager::Instance().getCurrentStrategy() == StrategyManager::TerranBunkerBuild)
+        {
+            readSolution();
+        }
     }
 }
 
@@ -345,27 +360,24 @@ void MapAnalysisManager::initClingoProgramSource()
 void MapAnalysisManager::runASPSolver()
 {
     // requires Clingo 3.0.5
-	
+
     std::string clingo = "bwapi-data\\AI\\clingo.exe ";
     std::string problemPart = "ITUBotWall.txt > ";
-	std::string outputFile = writeDir + BWAPI::Broodwar->mapName() + "out.txt";
+    std::string outputFile = writeDir + getFileNameForChokepoint();
 
-    std::string combined = (clingo + writeDir + problemPart + outputFile);
-	struct stat buf;
+    std::string combined = clingo + readDir + problemPart + outputFile;
 
-	//if this is the first time on the map, don't read from the file, just write to it
-	if (stat(outputFile.c_str(), &buf) == -1)
-	{
-		system(combined.c_str());
-		return;
-	}
-    
+    system(combined.c_str());
+}
 
+void MapAnalysisManager::readSolution() 
+{
     std::vector<std::string> lines;
     std::string line;
     unsigned lineCounter = 0;
-	
-	
+
+    std::string outputFile = readDir + getFileNameForChokepoint();
+    
     std::ifstream file(outputFile.c_str());
     if (file.is_open())
     {

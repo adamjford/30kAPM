@@ -4,6 +4,7 @@
 class MapAnalysisManager
 {
     void findChokeWithSmallestGap();
+    std::string getFileNameForChokepoint();
 
     ~MapAnalysisManager() { };
 
@@ -16,6 +17,7 @@ class MapAnalysisManager
     void analyzeChoke();
     void initClingoProgramSource();
     void runASPSolver();
+    void readSolution();
 public:
     void init();
 
