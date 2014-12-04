@@ -181,12 +181,8 @@ void StrategyManager::setStrategy()
 		return;
 	}
 	BWAPI::Broodwar->printf("Choosing strategy based on UCB");
-	//currentStrategy = TerranMarineRush;
-	//currentStrategy = TerranBunkerBuild;
-    // Will need to turn code below back on eventually
-    // For now, switch to the strategy you're testing above manually
 
-    /*
+    
     // if we are using file io to determine strategy, do so
     if (Options::Modules::USING_STRATEGY_IO)
     {
@@ -221,9 +217,9 @@ void StrategyManager::setStrategy()
     }
     else
     {
-        // otherwise return a random strategy
+		currentStrategy = TerranMarineRush;
     }
-    */
+    
 }
 
 void StrategyManager::onEnd(const bool isWinner)
