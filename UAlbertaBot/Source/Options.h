@@ -22,22 +22,22 @@ namespace Options
 		void checkOptions();							// checks to see if options are set in a sane manner
 	}
 
-    namespace BotModes
-    {
-        enum 
-        {  
-            AIIDE_TOURNAMENT,       // full bot for AIIDE tournament
-            CIG_TOURNAMENT,       // full bot for AIIDE tournament
-            MICRO_SEARCH_TEST,      // testing micro search on custom maps
-            REPLAY_VIS_TEST,         // testing opengl visualization with replays
+	namespace BotModes
+	{
+		enum 
+		{  
+			AIIDE_TOURNAMENT,       // full bot for AIIDE tournament
+			CIG_TOURNAMENT,       // full bot for AIIDE tournament
+			MICRO_SEARCH_TEST,      // testing micro search on custom maps
+			REPLAY_VIS_TEST,         // testing opengl visualization with replays
 			BUILD_ORDER_DEMO,
-            NUM_MODES
-        };
+			NUM_MODES
+		};
 
-        extern int CURRENT_BOT_MODE;
+		extern int CURRENT_BOT_MODE;
 
-        void SetBotMode(int mode);
-    }
+		void SetBotMode(int mode);
+	}
 
 	namespace Tournament
 	{
