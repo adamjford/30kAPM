@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <StrategyManager.h>
+#include <boost/lexical_cast.hpp>
 
 using namespace BWAPI;
 using std::endl;
@@ -54,8 +55,8 @@ std::string MapAnalysisManager::getFileNameForChokepoint()
 {
     Position center = choke->getCenter();
     std::string separator = "-";
-    std::string x = center.x;
-    std::string y = center.y;
+    std::string x = boost::lexical_cast<std::string>(center.x());
+    std::string y = boost::lexical_cast<std::string>(center.y());
     return Broodwar->mapName() + separator + x + separator + y;
 }
 
